@@ -16,7 +16,7 @@ import { VideoCard } from "#/app/(app)/(default)/(index)/_components/video-card.
 import { Image } from "#/components/image.tsx";
 import { Link } from "#/components/link.tsx";
 import { SearchForm } from "#/components/search-form.tsx";
-import type { IndexPage as IndexPageContent } from "#/lib/content/client/index-page.ts";
+import type { IndexPage as IndexPageContent } from "#/lib/cms/site/client.ts";
 import { createClient } from "#/lib/content/create-client.ts";
 
 export function generateMetadata(): Metadata {

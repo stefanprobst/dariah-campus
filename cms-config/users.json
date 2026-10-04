@@ -1,0 +1,52 @@
+{
+	"users": [
+		{
+			"id": "019f0000-0000-7000-8000-000000000001",
+			"name": "Ada Admin",
+			"email": null,
+			"identities": [
+				{
+					"provider": "development",
+					"subject": "1",
+					"login": "admin"
+				}
+			],
+			"roles": ["admin"],
+			"disabled": false,
+			"createdAt": "2026-10-04T00:00:00.000Z",
+			"updatedAt": "2026-10-04T00:00:00.000Z"
+		},
+		{
+			"id": "019f0000-0000-7000-8000-000000000002",
+			"name": "Edith Editor",
+			"email": null,
+			"identities": [
+				{
+					"provider": "development",
+					"subject": "2",
+					"login": "editor"
+				}
+			],
+			"roles": ["editor"],
+			"disabled": false,
+			"createdAt": "2026-10-04T00:00:00.000Z",
+			"updatedAt": "2026-10-04T00:00:00.000Z"
+		},
+		{
+			"id": "019f0000-0000-7000-8000-000000000003",
+			"name": "Carl Contributor",
+			"email": null,
+			"identities": [
+				{
+					"provider": "development",
+					"subject": "3",
+					"login": "contributor"
+				}
+			],
+			"roles": ["contributor"],
+			"disabled": false,
+			"createdAt": "2026-10-04T00:00:00.000Z",
+			"updatedAt": "2026-10-04T00:00:00.000Z"
+		}
+	]
+}

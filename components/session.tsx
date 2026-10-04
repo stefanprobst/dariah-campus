@@ -1,9 +1,8 @@
 import { assert } from "@acdh-oeaw/lib";
 import { DownloadIcon } from "lucide-react";
-import type { MDXContent } from "mdx/types";
 import { getTranslations } from "next-intl/server";
 import type { StaticImageData } from "next/image";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 import { Image } from "#/components/image.tsx";
 import { createClient } from "#/lib/content/create-client.ts";
@@ -15,7 +14,7 @@ interface SessionProps {
 	links: ReadonlyArray<{ label: string; href: string }>;
 	presentations: ReadonlyArray<{
 		attachments: ReadonlyArray<{ label: string; file: string }>;
-		content: MDXContent;
+		content: ComponentType;
 		links: ReadonlyArray<{ label: string; href: string }>;
 		speakers: ReadonlyArray<string>;
 		title: string;
@@ -24,7 +23,7 @@ interface SessionProps {
 		id: string;
 		name: string;
 		image: StaticImageData | string;
-		SpeakerDescription: MDXContent;
+		SpeakerDescription: ComponentType;
 	}>;
 	title: string;
 }

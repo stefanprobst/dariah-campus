@@ -1,14 +1,10 @@
-import { client } from "#/lib/content/client/index.ts";
-import { getPreviewMode } from "#/lib/content/github-client/get-preview-mode.ts";
-import { createGitHubClient } from "#/lib/content/github-client/index.ts";
+import { cache } from "react";
 
-// oxlint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function createClient() {
-	const preview = await getPreviewMode();
+import { getReader } from "#/lib/cms/server.ts";
+import { type SiteClient, getSiteClient } from "#/lib/cms/site/client.ts";
 
-	if (preview.status === "enabled") {
-		return createGitHubClient(preview);
-	}
-
-	return client;
-}
+/**
+ * Content for the current request: the previewed change set in draft mode, published content otherwise. Checking for
+ * content changes reads the content directory, so it happens once per request.
+ */
+export const createClient = cache(async (): Promise<SiteClient> => getSiteClient(await getReader()));

@@ -34,15 +34,12 @@ const config: Config = {
 			fullUrl: true,
 		},
 	},
-	outputFileTracingIncludes: {
-		"**/*": ["./public/assets/fonts/*.ttf"],
-	},
 	reactCompiler: true,
 	redirects() {
 		const redirects: Awaited<ReturnType<NonNullable<Config["redirects"]>>> = [
 			{
-				source: "/admin",
-				destination: "/keystatic",
+				source: "/keystatic/:path*",
+				destination: "/admin",
 				permanent: false,
 			},
 			{
@@ -73,6 +70,12 @@ const config: Config = {
 
 		return Promise.resolve(rewrites);
 	},
+	/** The content and identity stores read these at runtime; bundlers cannot see that statically. */
+	outputFileTracingIncludes: {
+		"**/*": ["./public/assets/fonts/*.ttf"],
+		"/api/cms/**": ["./cms-config/**/*"],
+	},
+	transpilePackages: ["@stefanprobst/cms"],
 	turbopack: {
 		rules: {
 			[reactAriaLocales]: {
