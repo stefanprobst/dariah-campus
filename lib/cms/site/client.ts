@@ -8,7 +8,7 @@ import type { AnyField, InferEntryData } from "@stefanprobst/cms/schema";
 import { createTranslator } from "next-intl";
 import type { ReactNode } from "react";
 
-import { getMediaSource } from "#/lib/cms/media.ts";
+import { getMediaSource, mediaUrls } from "#/lib/cms/media.ts";
 import type * as schemaModule from "#/lib/cms/schema.ts";
 import { schema } from "#/lib/cms/schema.ts";
 import { type PreparedContent, prepareContent } from "#/lib/cms/site/prepare.ts";
@@ -89,7 +89,7 @@ const t = createTranslator({ locale: defaultLocale, messages, namespace: "mdx" }
 
 interface Context {
 	slugs: Map<string, Map<string, string>>;
-	media: Map<string, { src: string; width: number | null; height: number | null }>;
+	media: Map<string, { src: string; download: string; width: number | null; height: number | null }>;
 }
 
 function getSlug(context: Context, collection: string, id: string): string | null {
@@ -112,7 +112,7 @@ function toLegacyLink(value: unknown, context: Context): LinkSchema | null {
 			return { discriminant: "hash", value: link.hash! };
 		}
 		case "download": {
-			return { discriminant: "download", value: context.media.get(link.media!)?.src ?? "" };
+			return { discriminant: "download", value: context.media.get(link.media!)?.download ?? "" };
 		}
 		case "search": {
 			return { discriminant: "search", value: { search: link.search ?? "", hash: link.hash ?? "" } };
@@ -193,7 +193,7 @@ function toLegacy(field: AnyField, value: unknown, context: Context): unknown {
 			return image != null ? { src: image.src, width: image.width, height: image.height } : null;
 		}
 		case "file": {
-			return context.media.get((value as { media: string }).media)?.src ?? null;
+			return context.media.get((value as { media: string }).media)?.download ?? null;
 		}
 		case "link": {
 			return toLegacyLink(value, context);
@@ -328,6 +328,8 @@ async function createSiteClient(reader: Reader<typeof schema>) {
 				entry.id,
 				{
 					src: getMediaSource(entry.data.file!),
+					/** The browser ignores `download` on links which redirect elsewhere, so the response asks for it. */
+					download: mediaUrls.file(entry.data.file!.key, { filename: entry.data.file!.filename, download: true }),
 					width: entry.data.file!.width,
 					height: entry.data.file!.height,
 				},
