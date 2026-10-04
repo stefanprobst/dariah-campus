@@ -41,3 +41,5 @@ pnpm app:dev                  # the site and the admin, reading .cms-migration/
 
 In local development, the admin offers the accounts in `cms-config/users.json` (`admin`, `editor`,
 `contributor`) without a password. See `.env.local.example` for connecting GitHub, S3 and imgproxy.
+The bucket needs no public access: media are served through imgproxy. `pnpm cms:upload-media` uploads
+the converted media to the configured bucket.
