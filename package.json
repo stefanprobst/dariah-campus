@@ -14,6 +14,7 @@
 		"build": "run-s generate:handle cms:build generate:metadata-dump generate:api-docs app:build search:collections:update",
 		"cms:build": "pnpm run cms:migrate --copy-media",
 		"cms:migrate": "tsx ./scripts/cms/migrate.ts",
+		"cms:upload-media": "dotenvx run -q -f ./.env.local --ignore MISSING_ENV_FILE -- tsx ./scripts/cms/upload-media.ts",
 		"cms:verify": "tsx ./scripts/cms/verify.ts",
 		"content:build": "dotenvx run -q -f ./.env.local --ignore MISSING_ENV_FILE -- tsx ./scripts/content/generate-content.ts build",
 		"content:dev": "dotenvx run -q -f ./.env.local --ignore MISSING_ENV_FILE -- tsx ./scripts/content/generate-content.ts watch",

@@ -8,11 +8,11 @@ import type { AnyField, InferEntryData } from "@stefanprobst/cms/schema";
 import { createTranslator } from "next-intl";
 import type { ReactNode } from "react";
 
+import { getMediaSource } from "#/lib/cms/media.ts";
 import type * as schemaModule from "#/lib/cms/schema.ts";
 import { schema } from "#/lib/cms/schema.ts";
 import { type PreparedContent, prepareContent } from "#/lib/cms/site/prepare.ts";
 import { type ContentProps, createContent } from "#/lib/cms/site/renderers.tsx";
-import { mediaStore } from "#/lib/cms/stores.ts";
 import { client as contentLanguages } from "#/lib/content/client/content/languages.ts";
 import { client as contentLicenses } from "#/lib/content/client/content/licenses.ts";
 import { client as contentTypes } from "#/lib/content/client/content/types.ts";
@@ -327,7 +327,7 @@ async function createSiteClient(reader: Reader<typeof schema>) {
 			mediaEntries.map((entry) => [
 				entry.id,
 				{
-					src: mediaStore.getUrl(entry.data.file!.key),
+					src: getMediaSource(entry.data.file!),
 					width: entry.data.file!.width,
 					height: entry.data.file!.height,
 				},

@@ -158,7 +158,8 @@ function normalizeSource(value: string): string {
 	if (key != null) {
 		return `media:${key}`;
 	}
-	const match = /\/media\/store\/file\/(?<key>.+)$/.exec(source);
+	/** Files of the store in local development, or the API's redirects to imgproxy. */
+	const match = /\/media\/(?:store\/file|image|file)\/(?<key>[^?]+)/.exec(source);
 	if (match != null) {
 		return `media:${match.groups!.key!}`;
 	}
