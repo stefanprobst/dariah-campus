@@ -1,9 +1,10 @@
-import { readFile, readdir, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { assert, log } from "@acdh-oeaw/lib";
 import * as v from "valibot";
 
+import { publishedReader } from "#/lib/cms/reader.ts";
 import { client } from "#/lib/content/client/index.ts";
 import { resources as sharedMetadata } from "#/lib/content/shared-metadata.config.ts";
 import {
@@ -17,31 +18,20 @@ const formatters = {
 	duration: new Intl.NumberFormat("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
 };
 
-async function loadJsonDir<T extends Record<string, unknown>>(dir: string): Promise<Map<string, T>> {
-	const files = await readdir(dir);
-	const map = new Map<string, T>();
-	await Promise.all(
-		files
-			.filter((f) => f.endsWith(".json"))
-			.map(async (file) => {
-				const raw = await readFile(join(dir, file), "utf-8");
-				map.set(file.slice(0, -5), JSON.parse(raw) as T);
-			}),
-	);
-	return map;
-}
-
 export async function createMetadata(): Promise<{
 	curricula: Array<CurriculumMetadata>;
 	resources: Array<ResourceMetadata>;
 }> {
-	const contentDir = join(process.cwd(), "content", "en");
-
-	const consortiaData = await loadJsonDir<{ "sshoc-marketplace-id": string }>(
-		join(contentDir, "dariah-national-consortia"),
+	/** Keyed by slug, which the content client uses for relationships. */
+	const [consortia, workingGroups] = await Promise.all([
+		publishedReader.collection("dariah-national-consortia").list(),
+		publishedReader.collection("dariah-working-groups").list(),
+	]);
+	const consortiaData = new Map(
+		consortia.map((entry) => [entry.slug, { "sshoc-marketplace-id": entry.data.sshocMarketplaceId }]),
 	);
-	const workingGroupsData = await loadJsonDir<{ "sshoc-marketplace-id": string }>(
-		join(contentDir, "dariah-working-groups"),
+	const workingGroupsData = new Map(
+		workingGroups.map((entry) => [entry.slug, { "sshoc-marketplace-id": entry.data.sshocMarketplaceId ?? "" }]),
 	);
 
 	function createNationalConsortium(code: string) {
