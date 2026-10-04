@@ -1,4 +1,4 @@
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -33,6 +33,21 @@ async function create() {
 	}
 
 	const absoluteFilePath = join(process.cwd(), path);
+
+	/** Cms entries keep their data in `index.json`, with the handle in `data.doi`. */
+	if (path.endsWith(".json")) {
+		const entry = JSON.parse(await readFile(absoluteFilePath, { encoding: "utf-8" })) as {
+			data: { doi?: string | null };
+		};
+		if (entry.data.doi != null && entry.data.doi !== "") {
+			return null;
+		}
+		const handle = await createHandle(createResourceUrl(path));
+		entry.data.doi = String(handle);
+		await writeFile(absoluteFilePath, `${JSON.stringify(entry, null, "\t")}\n`, { encoding: "utf-8" });
+		return handle;
+	}
+
 	const vfile = await read(absoluteFilePath, { encoding: "utf-8" });
 	matter(vfile, { strip: true });
 	const metadata = vfile.data.matter as { doi?: string };

@@ -25,3 +25,19 @@ Visit the website at <https://campus.dariah.eu>.
 
 Follow the contributing guidelines at
 <https://campus.dariah.eu/documentation/proposing-a-contribution>.
+
+## Development
+
+Content is managed with `@stefanprobst/cms`, at `/admin`.
+
+While the move from Keystatic is in progress, the content in `content/` is converted for the cms
+with:
+
+```bash
+pnpm cms:migrate --copy-media # writes .cms-migration/, see report.json for every fix to content
+pnpm cms:verify               # reads the result back and checks references
+pnpm app:dev                  # the site and the admin, reading .cms-migration/
+```
+
+In local development, the admin offers the accounts in `cms-config/users.json` (`admin`, `editor`,
+`contributor`) without a password. See `.env.local.example` for connecting GitHub, S3 and imgproxy.

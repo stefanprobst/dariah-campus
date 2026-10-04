@@ -332,6 +332,7 @@ export default async function EventResourcePage(props: Readonly<EventResourcePag
 							}),
 						)}
 						collection={`resources-${resource.kind}`}
+						entryId={resource.entryId}
 						endDate={endDate != null ? new Date(endDate) : undefined}
 						featuredImage={featuredImage}
 						href={resource.href}

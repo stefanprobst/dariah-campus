@@ -1,7 +1,6 @@
-import { withI18nPrefix } from "@acdh-oeaw/keystatic-lib";
 import { createUrl } from "@acdh-oeaw/lib";
 import { PencilIcon } from "lucide-react";
-import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 
@@ -18,7 +17,6 @@ import { TranslationOf } from "#/components/translation-of.tsx";
 import { Translations } from "#/components/translations.tsx";
 import { env } from "#/configs/env.config.ts";
 import type { SocialMediaKind } from "#/lib/content/options.ts";
-import { getIntlLanguage } from "#/lib/i18n/locales.ts";
 import { createFullUrl } from "#/lib/navigation/create-full-url.ts";
 
 interface ResourceProps {
@@ -31,6 +29,8 @@ interface ResourceProps {
 	children: ReactNode;
 	collection: string;
 	endDate?: Date;
+	/** The id in the cms. */
+	entryId: string;
 	featuredImage?: StaticImageData | string | null;
 	href: string;
 	id: string;
@@ -45,6 +45,12 @@ interface ResourceProps {
 	translations: Array<{ id: string; href: string; title: string; locale: string }>;
 }
 
+/** Pages pass the kind of resource, which is singular for some collections. */
+const adminCollections: Record<string, string> = {
+	"resources-event": "resources-events",
+	"resources-pathfinder": "resources-pathfinders",
+};
+
 export function Resource(props: Readonly<ResourceProps>): ReactNode {
 	const {
 		attachments = [],
@@ -53,8 +59,8 @@ export function Resource(props: Readonly<ResourceProps>): ReactNode {
 		collection,
 		href: _href,
 		endDate,
+		entryId,
 		featuredImage,
-		id,
 		isTranslationOf,
 		links = [],
 		location,
@@ -66,7 +72,6 @@ export function Resource(props: Readonly<ResourceProps>): ReactNode {
 		translations,
 	} = props;
 
-	const locale = useLocale();
 	const t = useTranslations("Resource");
 	const format = useFormatter();
 
@@ -123,7 +128,7 @@ export function Resource(props: Readonly<ResourceProps>): ReactNode {
 						href={String(
 							createUrl({
 								baseUrl: env.NEXT_PUBLIC_APP_PRODUCTION_BASE_URL,
-								pathname: `/keystatic/branch/main/collection/${encodeURIComponent(withI18nPrefix(collection, getIntlLanguage(locale)))}/item/${encodeURIComponent(id)}`,
+								pathname: `/admin/collections/${encodeURIComponent(adminCollections[collection] ?? collection)}/${encodeURIComponent(entryId)}`,
 							}),
 						)}
 						target="_blank"

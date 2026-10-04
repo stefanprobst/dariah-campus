@@ -51,7 +51,9 @@ export function define<
 		environment: Record<
 			PrefixedKeys<TBuildArgsPrefix, TBuildArgs> | UnprefixedKeys<TBuildArgsPrefix, TEnvVars>,
 			unknown
-		>;
+		> &
+			/** Variables every environment has, e.g. `NODE_ENV`. */
+			Partial<Record<keyof SharedSchema, unknown>>;
 		mode?: ValidationMode;
 	}): Result<
 		Readonly<v.InferOutput<v.ObjectSchema<TBuildArgs & TEnvVars, undefined>> & SharedSchema>,

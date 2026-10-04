@@ -1,9 +1,23 @@
-import type { ValueForReading } from "@keystatic/core";
-
-import type { createLinkSchema } from "#/lib/content/keystatic/utils/create-link-schema.ts";
 import { createHref } from "#/lib/navigation/create-href.ts";
 
-export type LinkSchema = ValueForReading<ReturnType<typeof createLinkSchema>>;
+interface EntryLink<TCollection extends string> {
+	discriminant: TCollection;
+	value: { id: string; hash: string };
+}
+
+/** Links as the content components receive them; `lib/cms/site/client.ts` converts cms link values to this shape. */
+export type LinkSchema =
+	| { discriminant: "external"; value: string }
+	| { discriminant: "hash"; value: string }
+	| { discriminant: "download"; value: string }
+	| { discriminant: "email"; value: string }
+	| { discriminant: "search"; value: { search: string; hash: string } }
+	| EntryLink<"resources-events">
+	| EntryLink<"resources-external">
+	| EntryLink<"resources-hosted">
+	| EntryLink<"resources-pathfinders">
+	| EntryLink<"curricula">
+	| EntryLink<"documentation">;
 
 // oxlint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function getLinkProps(params: LinkSchema) {

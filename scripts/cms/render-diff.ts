@@ -90,6 +90,13 @@ const explained: Record<string, Array<{ old: string | RegExp; new: string; reaso
 				"A link to a bare word resolved relative to the page; the migration made it the fragment it was meant to be.",
 		},
 	],
+	"/documentation/types-of-resources": [
+		{
+			old: 'href="/resources/external/citizen-science-in-the-digital-arts-and-humanities"',
+			new: 'href="/resources/hosted/citizen-science-in-the-digital-arts-and-humanities"',
+			reason: "The link named the wrong collection; the migration found the resource in the right one.",
+		},
+	],
 	"/imprint": [
 		{
 			old: / id="[^"]*"/g,
@@ -190,7 +197,8 @@ function normalize(node: Root | Element): void {
 				: child.type === "element" &&
 					  child.tagName === "a" &&
 					  typeof child.properties.href === "string" &&
-					  draftPaths.has(child.properties.href.split("#")[0]!)
+					  /** One link to a draft also has a typo, a trailing `)`. */
+					  draftPaths.has(child.properties.href.split("#")[0]!.replace(/\)$/, ""))
 					? flatten(child.children)
 					: node.type === "element" &&
 						  child.type === "element" &&

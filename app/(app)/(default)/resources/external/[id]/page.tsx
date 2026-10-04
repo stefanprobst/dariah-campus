@@ -279,6 +279,7 @@ export default async function ExternalResourcePage(props: Readonly<ExternalResou
 							}),
 						)}
 						collection={`resources-${resource.kind}`}
+						entryId={resource.entryId}
 						featuredImage={featuredImage}
 						href={resource.href}
 						id={resource.id}

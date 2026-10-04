@@ -8,7 +8,7 @@ fi
 branch="content/add-handle-${VERCEL_GIT_COMMIT_SHA:0:12}"
 repo="${VERCEL_GIT_REPO_OWNER}/${VERCEL_GIT_REPO_SLUG}"
 
-files=$(git diff --diff-filter=AMR --name-only ${VERCEL_GIT_PREVIOUS_SHA} ${VERCEL_GIT_COMMIT_SHA} -- 'content/*/curricula/**/index.mdx' 'content/*/resources/**/index.mdx' ':(exclude)content/*/resources/external/**' | xargs)
+files=$(git diff --diff-filter=AMR --name-only ${VERCEL_GIT_PREVIOUS_SHA} ${VERCEL_GIT_COMMIT_SHA} -- 'content/*/curricula/**/index.mdx' 'content/*/resources/**/index.mdx' 'content/*/curricula/**/index.json' 'content/*/resources/**/index.json' ':(exclude)content/*/resources/external/**' | xargs)
 
 if [[ -n "${files}" ]]; then
   # Two production builds can run concurrently (e.g. when two pull requests are merged

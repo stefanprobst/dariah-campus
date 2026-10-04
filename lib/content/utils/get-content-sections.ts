@@ -1,4 +1,4 @@
-import type { ContentSection } from "#/lib/content/mdx/with-content-sections.ts";
+import type { ContentSection } from "#/lib/cms/site/prepare.ts";
 
 /**
  * Resolves the section to display from the `?section=` search parameter. Falls back to the first section, so an

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
 import { Link } from "#/components/link.tsx";
-import type { ContentSection } from "#/lib/content/mdx/with-content-sections.ts";
+import type { ContentSection } from "#/lib/cms/site/prepare.ts";
 import { createHref } from "#/lib/navigation/create-href.ts";
 
 interface ContentSectionNavigationProps {

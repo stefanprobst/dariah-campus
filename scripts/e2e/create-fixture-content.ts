@@ -11,8 +11,8 @@ const positionalArgsSchema = v.optional(v.picklist(["create", "remove"]), "creat
 const root = join(import.meta.dirname, "..", "..");
 
 /**
- * The e2e suite drives the content widgets through the whole pipeline - mdx, the remark and rehype plugins, the content
- * collection, and the rendered page - so its fixtures have to be real content, compiled by `content:build` like
+ * The e2e suite drives the content widgets through the whole pipeline - the conversion to the cms, the preparation of
+ * rich text, and the rendered page - so its fixtures have to be real content, converted by `cms:migrate` like
  * everything else.
  *
  * They are copied in from `e2e/fixtures/resources/` instead of living in the content collection, and the copies are
@@ -24,9 +24,9 @@ const targetDirectory = join(root, "content", "en", "resources", "hosted");
 const assetsDirectory = join(root, "public", "assets", "content", "assets", "en", "resources", "hosted");
 
 /**
- * The image widgets need real files: the `with-image-sizes` rehype plugin reads their dimensions off disk at build
- * time. They are generated rather than committed, because nothing about them matters except that they are distinct, and
- * that keeps binaries out of the repository.
+ * The image widgets need real files: the conversion turns them into media entries, with their dimensions read off disk.
+ * They are generated rather than committed, because nothing about them matters except that they are distinct, and that
+ * keeps binaries out of the repository.
  */
 const images = [
 	{ name: "layer-1.png", background: { r: 205, g: 226, b: 245 } },

@@ -19,6 +19,7 @@ import * as path from "node:path";
 import { parseArgs } from "node:util";
 
 import { log } from "@acdh-oeaw/lib";
+import { withGfm } from "@acdh-oeaw/mdx-lib";
 import { type StoredEntry, createJsonEntryFormat, getSingletonIdentity, getUploadKey } from "@stefanprobst/cms/core";
 import type { BlockNode, ComponentNode, InlineNode, RichTextRoot } from "@stefanprobst/cms/rich-text";
 import {
@@ -31,7 +32,6 @@ import { type AnyComponent, type AnyField, validateData } from "@stefanprobst/cm
 import { imageSize } from "image-size";
 import { remark } from "remark";
 import remarkFrontmatter from "remark-frontmatter";
-import remarkGfm from "remark-gfm";
 import remarkMdx from "remark-mdx";
 import { parse as parseYaml } from "yaml";
 
@@ -57,7 +57,8 @@ const outputDirectory = path.resolve(root, args.output);
 const locale = "en";
 
 const format = createJsonEntryFormat({ schema });
-const processor = remark().use(remarkFrontmatter).use(remarkMdx).use(remarkGfm);
+/** The gfm subset of the mdx pipeline: no autolinks for bare urls. */
+const processor = remark().use(remarkFrontmatter).use(remarkMdx).use(withGfm, {});
 
 const contentTypes: Record<string, string> = {
 	gif: "image/gif",

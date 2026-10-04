@@ -58,8 +58,11 @@ jobs:
       - name: Create e2e fixture content
         run: pnpm run e2e:fixtures:create
 
-      - name: Transform content
-        run: pnpm run content:build
+      - name: Convert content for the cms
+        run: pnpm run cms:migrate --copy-media
+
+      - name: Verify converted content
+        run: pnpm run cms:verify
 
       - name: Generate metadata dump
         run: pnpm run generate:metadata-dump

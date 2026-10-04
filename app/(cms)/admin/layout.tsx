@@ -2,6 +2,7 @@ import "#/app/(cms)/admin/admin.css";
 
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { LocalizedStringProvider } from "react-aria-components/i18n";
 
 import { getMetadata } from "#/lib/i18n/metadata.ts";
 
@@ -23,7 +24,11 @@ interface CmsLayoutProps {
 export default function CmsLayout(props: Readonly<CmsLayoutProps>): ReactNode {
 	return (
 		<html lang={locale}>
-			<body>{props.children}</body>
+			<body>
+				{/* The client bundle leaves out react-aria's strings, see `next.config.ts`. */}
+				<LocalizedStringProvider locale={locale} />
+				{props.children}
+			</body>
 		</html>
 	);
 }

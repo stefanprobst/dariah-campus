@@ -335,15 +335,20 @@ async function createSiteClient(reader: Reader<typeof schema>) {
 		),
 	};
 
-	function document<TName extends string>(name: TName, entry: { slug: string; data: unknown }) {
+	function document<TName extends string>(name: TName, entry: { id: string; slug: string; data: unknown }) {
 		return extend(lazyContent(richText(entry.data), context), {
 			id: entry.slug,
+			/** The id in the cms, e.g. for links to the admin. */
+			entryId: entry.id,
 			metadata: toMetadata(name, entry.data, context),
 		});
 	}
 
-	/** Translations are linked entries now; drafts are change sets and never published. */
-	const translations: Translations & { draft: boolean } = { translations: [], draft: false };
+	/**
+	 * Translations are linked entries now, and drafts are change sets, which are never published: pages which still check
+	 * for these find none.
+	 */
+	const translations: Translations & { draft?: boolean } = { translations: [] };
 
 	const hosted = hostedEntries.map((entry) => {
 		const doc = document("resources-hosted", entry);

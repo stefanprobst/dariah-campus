@@ -1,9 +1,4 @@
-import type { components } from "#/lib/content/mdx/components.tsx";
 import type { IntlLanguage } from "#/lib/i18n/locales.ts";
-
-declare global {
-	type MDXProvidedComponents = typeof components;
-}
 
 declare module "@acdh-oeaw/mdx-lib" {
 	export interface MdxConfig {

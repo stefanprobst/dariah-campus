@@ -5,7 +5,8 @@ import { env } from "#/configs/env.config.ts";
 export function createResourceUrl(path: string): URL {
 	const message = `Invalid resource path: ${path}`;
 
-	assert(path.endsWith("/index.mdx"), message);
+	/** Keystatic entries, and cms entries after the move. */
+	assert(path.endsWith("/index.mdx") || path.endsWith("/index.json"), message);
 
 	const segments = path.split("/");
 

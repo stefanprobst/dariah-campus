@@ -298,6 +298,7 @@ export default async function PathfinderResourcePage(props: Readonly<PathfinderR
 							}),
 						)}
 						collection={`resources-${resource.kind}`}
+						entryId={resource.entryId}
 						featuredImage={featuredImage}
 						href={resource.href}
 						id={resource.id}

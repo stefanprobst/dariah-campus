@@ -296,6 +296,7 @@ export default async function HostedResourcePage(props: Readonly<HostedResourceP
 							}),
 						)}
 						collection={`resources-${resource.kind}`}
+						entryId={resource.entryId}
 						featuredImage={featuredImage}
 						href={resource.href}
 						id={resource.id}
