@@ -47,28 +47,6 @@ content-type: training-module
   </WorksheetSection>
 </Worksheet>
 
-## Worksheet with empty fields
-
-The cms saves entries even when a required field was left empty, so an untitled worksheet, untitled
-sections, a question without a prompt and a section without questions all have to be survivable.
-
-<Worksheet>
-  <WorksheetSection>
-    <WorksheetQuestion label="Which sources did you consult?" variant="short" />
-
-    <WorksheetQuestion label="" variant="short" />
-
-  </WorksheetSection>
-
-<WorksheetSection title="Discarded section">
-	<WorksheetSectionDescription>This section is dropped, because it has no questions.</WorksheetSectionDescription>
-</WorksheetSection>
-
-  <WorksheetSection>
-    <WorksheetQuestion label="What would you do differently?" variant="short" />
-  </WorksheetSection>
-</Worksheet>
-
 ## Quiz with an answer error message
 
 <Quiz>

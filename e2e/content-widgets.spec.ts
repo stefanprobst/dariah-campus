@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { expect, test } from "@playwright/test";
 
 import { focusStably, waitForHydration } from "#/e2e/utils.ts";
@@ -9,6 +12,15 @@ import { focusStably, waitForHydration } from "#/e2e/utils.ts";
 const pathname = "/resources/hosted/e2e-content-widgets";
 
 const assetPrefix = "/assets/content/assets/en/resources/hosted/e2e-content-widgets";
+
+/** Media keys of the converted assets, written by `pnpm cms:migrate`. */
+const mediaKeys = JSON.parse(
+	readFileSync(join(import.meta.dirname, "..", ".cms-migration", "assets.json"), "utf-8"),
+) as Record<string, string>;
+
+function getMediaUrl(asset: string): string {
+	return `/api/cms/media/store/file/${mediaKeys[asset]!}`;
+}
 
 test.describe("carousel", () => {
 	test.beforeEach(() => {
@@ -146,7 +158,11 @@ test.describe("image comparison slider", () => {
 			Array.from(node.querySelectorAll("img")).map((image) => image.getAttribute("src")),
 		);
 
-		expect(sources).toStrictEqual([`${assetPrefix}/layer-1.png`, `${assetPrefix}/layer-3.png`]);
+		/** The images are served from the media library, under the keys the migration gave the fixture's files. */
+		expect(sources).toStrictEqual([
+			getMediaUrl(`${assetPrefix}/layer-1.png`),
+			getMediaUrl(`${assetPrefix}/layer-3.png`),
+		]);
 	});
 
 	/** The separator between the two images is focusable and moves with the arrow keys. */

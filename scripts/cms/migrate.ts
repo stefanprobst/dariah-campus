@@ -463,6 +463,10 @@ function convertValue(field: AnyField, value: unknown, context: Context): unknow
 		}
 		case "object": {
 			const fields = definition.fields as Record<string, AnyField>;
+			/** Items of quizzes may be written as strings, e.g. `items={["Charter"]}`, which the components accept. */
+			if (typeof value === "string" && Object.keys(fields).join() === "label") {
+				return { label: value };
+			}
 			const source = (value ?? {}) as Record<string, unknown>;
 			const result: Record<string, unknown> = {};
 			for (const [key, child] of Object.entries(fields)) {
@@ -476,7 +480,15 @@ function convertValue(field: AnyField, value: unknown, context: Context): unknow
 		}
 		case "array": {
 			const item = definition.item as AnyField;
-			const items = Array.isArray(value) ? value : [];
+			/** Lists of words may be written as one string, e.g. `distractors="merge, rebase"`, which the components accept. */
+			const list =
+				typeof value === "string"
+					? value
+							.split(",")
+							.map((word) => word.trim())
+							.filter(Boolean)
+					: value;
+			const items = Array.isArray(list) ? list : [];
 			const result: Array<unknown> = [];
 			for (const [index, element] of items.entries()) {
 				result.push(convertValue(item, element, { ...context, path: [...context.path, index] }));

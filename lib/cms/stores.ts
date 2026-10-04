@@ -64,7 +64,8 @@ function createContentStore(): ContentStore {
 			baseBranch: env.CMS_CONTENT_BRANCH,
 		});
 	}
-	return createFsContentStore({ root, format });
+	/** In production, content on the filesystem only changes through the store, which keeps its cache current. */
+	return createFsContentStore({ root, format, cache: env.NODE_ENV === "production" ? "static" : "check" });
 }
 
 function createIdentityStore(): IdentityStore {

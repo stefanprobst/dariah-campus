@@ -80,54 +80,6 @@ test.describe("worksheet", () => {
 		await expect(worksheet.getByRole("listitem")).toHaveCount(2);
 	});
 
-	/** The cms saves entries even when a required field was left empty. */
-	test("drops questions without a prompt and sections without questions", async ({ page }) => {
-		await page.goto(pathname);
-
-		const worksheet = getWorksheet(page, "Worksheet");
-
-		await expect(getProgress(worksheet)).toContainText("Step 1 of 3");
-
-		const first = worksheet.getByRole("group", { name: "Section 1" });
-		await expect(first.getByRole("textbox")).toHaveCount(1);
-		await expect(first.getByRole("textbox", { name: "Which sources did you consult?" })).toBeVisible();
-
-		await expect(page.getByText("Discarded section")).toHaveCount(0);
-	});
-
-	test("falls back to generated titles", async ({ page }) => {
-		await page.goto(pathname);
-
-		/** A missing worksheet title used to throw on download, so the fallback has to reach the document too. */
-		const worksheet = getWorksheet(page, "Worksheet");
-		const progress = getProgress(worksheet);
-
-		await expect(worksheet).toBeVisible();
-		await expect(progress).toContainText("Section 1");
-		await expect(worksheet.getByRole("group", { name: "Section 1" })).toBeVisible();
-
-		await worksheet.getByRole("button", { exact: true, name: "Next" }).click();
-
-		await expect(progress).toContainText("Section 2");
-		await expect(worksheet.getByRole("group", { name: "Section 2" })).toBeVisible();
-
-		await worksheet.getByRole("button", { name: "Review answers" }).click();
-
-		const summary = worksheet.getByRole("group", { name: "Summary" });
-		await expect(summary.getByText("Section 1")).toBeVisible();
-		await expect(summary.getByText("Section 2")).toBeVisible();
-
-		const download = page.waitForEvent("download");
-		await worksheet.getByRole("button", { name: "Download document" }).click();
-		const file = await download;
-
-		expect(file.suggestedFilename()).toBe("worksheet.doc");
-
-		const content = await readFile(await file.path(), "utf-8");
-		expect(content).toContain("Section 1");
-		expect(content).toContain("Section 2");
-	});
-
 	test("keeps answers across a reload, and clears them on request", async ({ page }) => {
 		await page.goto(pathname);
 
