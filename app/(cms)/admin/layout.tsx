@@ -1,4 +1,5 @@
 import "#/app/(cms)/admin/admin.css";
+import "#/styles/cms-previews.css";
 
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
